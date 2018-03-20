@@ -75,7 +75,13 @@ def run():
     source_repository = SvnRepository(config.source_repository)
 
     revision_mapper = RevisionMapper(config)
-    dump_writer = SvnDumpWriter(stdout)
+
+    out_file = stdout
+    if config.dump_file:
+        # TODO: add failure cases here
+        out_file = open(config.dump_file, "wb")
+    dump_writer = SvnDumpWriter(out_file)
+
     with LumpPostProcessor(config, revision_mapper, dump_writer) as lump_post_processor:
         lump_builder = LumpBuilder(config, source_repository, interesting_paths, lump_post_processor)
         parent_directory_lump_generator = ParentDirectoryLumpGenerator(interesting_paths, lump_builder)

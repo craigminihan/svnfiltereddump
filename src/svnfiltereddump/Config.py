@@ -26,8 +26,17 @@ def _parse_command_line(command_line):
         help="Copy revisions even if they have no effect on included paths at all."
     )
     parser.add_option(
+        '--incremental', action='store_true', dest='incremental', default=False,
+        help="Don't squash the first revision."
+    )
+    parser.add_option(
         '--start-rev', dest='start_rev', type='int',
         help="Squash the revision history below the given revision. Generate artificial first revision with represents the given input revision.",
+        metavar='NUMBER'
+    )
+    parser.add_option(
+        '--max-revs', dest='max_revs', type='int',
+        help="Limit the maximum number of revisions processed.",
         metavar='NUMBER'
     )
     parser.add_option(
@@ -55,6 +64,11 @@ def _parse_command_line(command_line):
     parser.add_option(
         '-l', '--log-file', dest='log_file',
         help="Write messages to given log file.",
+        metavar='FILE'
+    )
+    parser.add_option(
+        '--dump-file', dest='dump_file',
+        help="Write the dump stream to given file.",
         metavar='FILE'
     )
 
@@ -102,10 +116,13 @@ class Config(object):
         self.exclude_paths = exclude_paths
 
         self.keep_empty_revs = options.keep_empty_revs
+        self.incremental = options.incremental
         self.start_rev = options.start_rev
+        self.max_revs = options.max_revs
         self.create_parent_dirs = options.create_parent_dirs
         self.quiet = options.quiet
         self.log_file = options.log_file
+        self.dump_file = options.dump_file
 
         self.drop_old_tags_and_branches = options.drop_old_tags_and_branches
 

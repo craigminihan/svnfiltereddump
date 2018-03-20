@@ -19,7 +19,7 @@ class DumpController(object):
     def _get_strategy_and_aux_data_for_revision(self, rev):
         if rev == DUMP_HEADER_PSEUDO_REV:
             return ( STRATEGY_DUMP_HEADER, None )
-        if rev == self.config.start_rev:
+        if rev == self.config.start_rev and not self.config.incremental:
             return ( STRATEGY_BOOTSTRAP, None )
 
         changes_by_type = self.repository.get_changed_paths_by_change_type_for_revision(rev)
@@ -52,10 +52,13 @@ class DumpController(object):
         first_revision = 1
         if self.config.start_rev:
             first_revision = self.config.start_rev
-        last_revision = self.repository.get_youngest_revision()
 
-        for revision in xrange(first_revision, last_revision+1):
+        last_revision = self.repository.get_youngest_revision() + 1
+        if self.config.max_revs:
+            last_revision = min(first_revision + self.config.max_revs, last_revision)
+
+        for revision in xrange(first_revision, last_revision):
             ( strategy, aux_data ) = self._get_strategy_and_aux_data_for_revision(revision)
-            info("Processing input revsion %d using strategy %s ..." % ( revision, strategy ) )
+            info("Processing input revision %d using strategy %s ..." % ( revision, strategy ) )
             handler = self.revision_handlers_by_strategy[strategy]
             handler.process_revision(revision, aux_data) 
