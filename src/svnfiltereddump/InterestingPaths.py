@@ -57,9 +57,10 @@ class InterestingPaths(object):
     def is_interesting(self, path):
         ( node, node_type ) = self._get_node_and_type_of_path(path)
         if node_type == INTERESTING:
-            path = '/' + path
+            rooted_path = '/' + path
             for pre in self._exclude_patterns:
-                if pre.match(path):
+                if pre.match(rooted_path):
+                    self._mark_path_as_type(path, BORING)
                     return False
         return node_type == INTERESTING
 
