@@ -23,7 +23,7 @@ def _parse_command_line(command_line):
     )
     parser.add_option(
         '--pad-start-with-empty-revs', action='store_true', dest='pad_start_with_empty_revs', default=False,
-        help="Used with --start-rev will pad the output stream with empty revisions up to the start revision."
+        help="Used with --start-rev; will pad the output stream with empty revisions up to the start revision."
     )
     parser.add_option(
         '--incremental', action='store_true', dest='incremental', default=False,
@@ -94,7 +94,7 @@ def _get_file_as_list(name):
     list = [ ]
     fh = open(name, 'r')
     for line in fh:
-        if line[-1:] == "\n":
+        if line[-1:] == "\n" and len(line) > 1:
             line = line[:-1]
         list.append(line)
     return list
