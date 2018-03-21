@@ -51,10 +51,11 @@ class DumpController(object):
         header_handler.process_revision(DUMP_HEADER_PSEUDO_REV, None)
 
         first_revision = 1
-        if self.config.start_rev:
+        if self.config.start_rev > first_revision:
             first_revision = self.config.start_rev
             if self.config.pad_start_with_empty_revs:
                 handler = self.revision_handlers_by_strategy[STRATEGY_EMPTY]
+                info("Injecting %d empty revisions into the dump stream ..." % (first_revision - 1))
                 for revision in xrange(1, first_revision):
                     handler.process_revision(revision, None)
 
