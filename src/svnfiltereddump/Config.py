@@ -22,8 +22,8 @@ def _parse_command_line(command_line):
         metavar='FILE'
     )
     parser.add_option(
-        '--keep-empty-revs', action='store_true', dest='keep_empty_revs', default=False,
-        help="Copy revisions even if they have no effect on included paths at all."
+        '--pad-start-with-empty-revs', action='store_true', dest='pad_start_with_empty_revs', default=False,
+        help="Used with --start-rev will pad the output stream with empty revisions up to the start revision."
     )
     parser.add_option(
         '--incremental', action='store_true', dest='incremental', default=False,
@@ -115,7 +115,8 @@ class Config(object):
             exclude_paths += _get_file_as_list(file)
         self.exclude_paths = exclude_paths
 
-        self.keep_empty_revs = options.keep_empty_revs
+        self.keep_empty_revs = True
+        self.pad_start_with_empty_revs = options.pad_start_with_empty_revs
         self.incremental = options.incremental
         self.start_rev = options.start_rev
         self.max_revs = options.max_revs

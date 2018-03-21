@@ -6,6 +6,7 @@ STRATEGY_IGNORE = 'IGNORE'
 STRATEGY_SYNTHETIC_DELETES = 'SYNTHETIC_DELETES'
 STRATEGY_DUMP_SCAN = 'DUMP_SCAN'
 STRATEGY_BOOTSTRAP = 'BOOTSTRAP'
+STRATEGY_EMPTY = 'EMPTY'
 
 DUMP_HEADER_PSEUDO_REV = -1
 
@@ -52,6 +53,10 @@ class DumpController(object):
         first_revision = 1
         if self.config.start_rev:
             first_revision = self.config.start_rev
+            if self.config.pad_start_with_empty_revs:
+                handler = self.revision_handlers_by_strategy[STRATEGY_EMPTY]
+                for revision in xrange(1, first_revision):
+                    handler.process_revision(revision, None)
 
         last_revision = self.repository.get_youngest_revision() + 1
         if self.config.max_revs:

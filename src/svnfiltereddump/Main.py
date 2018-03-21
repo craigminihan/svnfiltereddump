@@ -6,13 +6,14 @@ from os.path import basename
 from string import join
 import logging
 
-from DumpController import DumpController, STRATEGY_DUMP_HEADER, STRATEGY_IGNORE, STRATEGY_SYNTHETIC_DELETES, STRATEGY_DUMP_SCAN, STRATEGY_BOOTSTRAP, DUMP_HEADER_PSEUDO_REV
+from DumpController import DumpController, STRATEGY_DUMP_HEADER, STRATEGY_IGNORE, STRATEGY_SYNTHETIC_DELETES, STRATEGY_DUMP_SCAN, STRATEGY_BOOTSTRAP, DUMP_HEADER_PSEUDO_REV, STRATEGY_EMPTY
 
 from DumpHeaderGenerator import DumpHeaderGenerator
 from BootsTrapper import BootsTrapper
 from DumpFilter import DumpFilter
 from SyntheticDeleter import SyntheticDeleter
 from RevisionIgnorer import RevisionIgnorer
+from EmptyRevision import EmptyRevision
 
 from LumpBuilder import LumpBuilder
 from LumpPostProcessor import LumpPostProcessor
@@ -92,7 +93,8 @@ def run():
             STRATEGY_IGNORE:                RevisionIgnorer(lump_builder),
             STRATEGY_SYNTHETIC_DELETES:     SyntheticDeleter(source_repository, lump_builder),
             STRATEGY_DUMP_SCAN:             DumpFilter(config, source_repository, interesting_paths, lump_builder),
-            STRATEGY_BOOTSTRAP:             BootsTrapper(config, source_repository, interesting_paths, lump_builder)
+            STRATEGY_BOOTSTRAP:             BootsTrapper(config, source_repository, interesting_paths, lump_builder),
+            STRATEGY_EMPTY:                 EmptyRevision(dump_writer)
         }
 
         controller = DumpController(
