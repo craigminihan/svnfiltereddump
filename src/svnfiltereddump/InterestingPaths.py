@@ -17,12 +17,12 @@ class InterestingPaths(object):
         included = len(self._include_patterns) == 0
         if not included:
             for pre in self._include_patterns:
-                if pre.match(rooted_path):
+                if pre.search(rooted_path):
                     included = True
                     break
         if included:
             for pre in self._exclude_patterns:
-                if pre.match(rooted_path):
+                if pre.search(rooted_path):
                     included = False
                     break
         return included
