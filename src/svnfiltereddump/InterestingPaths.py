@@ -1,3 +1,4 @@
+import re
 
 INHERITED = "INHERITED"
 BORING = "BORING"
@@ -32,12 +33,14 @@ class InterestingPaths(object):
 
     def __init__(self):
         self.root_node = _PathNode(None)
+        self._exclude_patterns = []
 
     def mark_path_as_interesting(self, path):
         self._mark_path_as_type(path, INTERESTING)
 
     def mark_path_as_boring(self, path):
-        self._mark_path_as_type(path, BORING)
+        #self._mark_path_as_type(path, BORING)
+        self._exclude_patterns.append(re.compile(path))
 
     def _mark_path_as_type(self, path, node_type):
         path_elements = split_path(path)
@@ -53,6 +56,11 @@ class InterestingPaths(object):
 
     def is_interesting(self, path):
         ( node, node_type ) = self._get_node_and_type_of_path(path)
+        if node_type == INTERESTING:
+            path = '/' + path
+            for pre in self._exclude_patterns:
+                if pre.match(path):
+                    return False
         return node_type == INTERESTING
 
     def _get_node_and_type_of_path(self, path):
