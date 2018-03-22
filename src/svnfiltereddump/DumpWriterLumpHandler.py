@@ -28,8 +28,8 @@ class DumpWriterLumpHandler(object):
     def _match_commands(self, lump):
         commands = []
         for command in self._config.commands:
-            if lump.has_copy_from is False or command.node.copy_from is True:
-                node = command.node
+            node = command.node
+            if lump.has_copy_from is False or node.copy_from is True:
                 if lump.path == node.path and lump.kind == node.kind and lump.action == node.action:
                     commands.append(command)
         return commands
@@ -46,7 +46,7 @@ class DumpWriterLumpHandler(object):
         return content
 
     def _new_lump(self, command):
-        path = command.content.path if command.content.path else command.node.path
+        path = command.content.path or command.node.path
         path += '/' + command.content.name
         content = self._get_content(command)
         content_length = len(content)

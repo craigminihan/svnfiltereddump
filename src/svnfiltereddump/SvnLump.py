@@ -27,6 +27,12 @@ class SvnLump:
     def get_header_keys(self):
         return self.header_order
 
+    def get_header_item(self, index):
+        item = None
+        if index < len(self.header_order):
+            item = self.header_order[index]
+        return item
+
     @property
     def path(self):
         return self.headers.get("Node-path", None)
@@ -53,4 +59,7 @@ class SvnLump:
 
     @property
     def has_copy_from(self):
-        return self.copy_from_rev or self.copy_from_path
+        return (self.copy_from_rev is not None) or (self.copy_from_path is not None)
+
+    def __str__(self):
+        return self.revision or self.get_header_item(0)
