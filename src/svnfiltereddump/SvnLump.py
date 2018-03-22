@@ -42,3 +42,15 @@ class SvnLump:
     @property
     def revision(self):
         return self.headers.get("Revision-number", None)
+
+    @property
+    def copy_from_rev(self):
+        return self.headers.get("Node-copyfrom-rev", None)
+
+    @property
+    def copy_from_path(self):
+        return self.headers.get("Node-copyfrom-path", None)
+
+    @property
+    def has_copy_from(self):
+        return self.copy_from_rev or self.copy_from_path
