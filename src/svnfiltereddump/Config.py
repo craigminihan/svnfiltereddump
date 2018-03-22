@@ -71,6 +71,11 @@ def _parse_command_line(command_line):
         help="Write the dump stream to given file.",
         metavar='FILE'
     )
+    parser.add_option(
+        '--lump-commands-file', dest='lump_commands_file',
+        help="A file containing commands to process when matching lumps are found in the stream.",
+        metavar='FILE'
+    )
 
     (options, args ) =  parser.parse_args(command_line) 
 
@@ -124,6 +129,7 @@ class Config(object):
         self.quiet = options.quiet
         self.log_file = options.log_file
         self.dump_file = options.dump_file
+        self.lump_commands_file = options.lump_commands_file
 
         self.drop_old_tags_and_branches = options.drop_old_tags_and_branches
 

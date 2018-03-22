@@ -19,6 +19,7 @@ from LumpBuilder import LumpBuilder
 from LumpPostProcessor import LumpPostProcessor
 
 from SvnDumpWriter import SvnDumpWriter
+from DumpWriterLumpHandler import DumpWriterLumpHandler
 from SvnRepository import SvnRepository
 
 from Config import Config
@@ -81,7 +82,10 @@ def run():
     if config.dump_file:
         # TODO: add failure cases here
         out_file = open(config.dump_file, "wb")
+
     dump_writer = SvnDumpWriter(out_file)
+    if config.lump_commands_file:
+        dump_writer.add_handler(DumpWriterLumpHandler(config.lump_commands_file))
 
     with LumpPostProcessor(config, revision_mapper, dump_writer) as lump_post_processor:
         lump_builder = LumpBuilder(config, source_repository, interesting_paths, lump_post_processor)

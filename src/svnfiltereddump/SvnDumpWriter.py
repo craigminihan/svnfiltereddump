@@ -1,16 +1,22 @@
-
-from logging import info
-
 class SvnDumpWriter(object):
     def __init__(self, file_handle):
         self.file_handle = file_handle
+        self._post_handlers = []
+
+    def add_handler(self, handler):
+        self._post_handlers.append(handler)
 
     def write_lump(self, lump):
+        self._write_lump(lump)
+        for h in self._post_handlers:
+            h.post_process(lump, self._write_lump)
+
+    def _write_lump(self, lump):
         self._write_headers(lump)
         props_written = self._write_properties(lump)
         content_written = self._write_content(lump)
         if props_written or content_written:
-            self.file_handle.write("\n") 
+            self.file_handle.write("\n")
 
     def _write_headers(self, lump):
         fh = self.file_handle
